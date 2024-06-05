@@ -12,6 +12,8 @@ import { addAxiosInterceptors } from 'misc/requests';
 import * as pages from 'constants/pages';
 import AuthoritiesProvider from 'misc/providers/AuthoritiesProvider';
 import DefaultPage from 'pageProviders/Default';
+import DriversPage from 'pageProviders/Drivers';
+import DriverDetailsPage from 'pageProviders/DriverDetails';
 import Loading from 'components/Loading';
 import LoginPage from 'pageProviders/Login';
 import PageContainer from 'pageProviders/components/PageContainer';
@@ -50,6 +52,7 @@ function App() {
       ...state,
       componentDidMount: true,
     });
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -74,6 +77,18 @@ function App() {
                     <Route
                       element={<DefaultPage />}
                       path={`${pageURLs[pages.defaultPage]}`}
+                    />
+                    <Route
+                      element={<DriversPage />}
+                      path={`${pageURLs[pages.driversPage]}`}
+                    />
+                      <Route
+                      element={<DriverDetailsPage />}
+                      path={`${pageURLs[pages.driverDetailsPageAdd]}`}
+                    />
+                      <Route
+                      element={<DriverDetailsPage />}
+                      path={`${pageURLs[pages.driverDetailsPageID]}`}
                     />
                     <Route
                       element={<SecretPage />}

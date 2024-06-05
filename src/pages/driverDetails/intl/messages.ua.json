@@ -1,0 +1,22 @@
+{
+    "addLabel":"Додати водія",
+    "entityLabel1":"Додати водія",
+    "revisionLabel":"Деталі водія",
+    "revisionbuttonLabel":"повирнутися до водіїв",
+    "cancelLabel":"Скасувати",
+    "labelEdit":"змінити водія",
+    "id":"id",
+    "name":"Ім'я",
+    "surname":"Прізвище",
+    "companyId":"Id компанії",
+    "age": "Вік",
+    "drivingExperience":"Досвід водіння",
+    "salary":"Зарплата",
+    "cars":"Авто",
+    "inFildValidation":"У полі",
+    "digitsValidation":"мають бути тільки цифри",
+    "nameValidation":"має бути тільки строка довша за 2 символи",
+    "ageValidation":"має бути ваш вік більший за 18",
+    "drivingExperienceValidation":"має бути ващ досвід кермування з моменту досягнення 18 років",
+    "carsValidation":"має бути назва вашої машини/машин"
+}

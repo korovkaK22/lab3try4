@@ -1,0 +1,19 @@
+{
+    "driversTable":"Drivers table",
+    "id":"id",
+    "name":"Name",
+    "surname":"Surname",
+    "drivingExperience":"Driving experience",
+    "cars":"Cars",
+    "deleteConfirmation":"Delete Confirmation",
+    "deleteText":"Are you sure you want to delete this driver?",
+    "cancelDelete":"NO",
+    "confirmDelete":"YES",
+    "deleteSuccessMessage":"Driver successfully deleted",
+    "deleteErrorMessage":"Failed to delete driver",
+    "filterMenuText":"Apply Filters",
+    "buttonText":"Filters",
+    "drivingExperienceLabel":"Driving Experience ≥",
+    "nameLabel":"Name",
+    "addDriverButtonText":"Add Driver"
+}

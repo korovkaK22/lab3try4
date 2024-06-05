@@ -1,0 +1,19 @@
+{
+    "driversTable":"Таблиця водіїв",
+    "id":"id",
+    "name":"Ім'я",
+    "surname":"Прізвище",
+    "drivingExperience":"Досвід водіння",
+    "cars":"Авто",
+    "deleteConfirmation":"Підтвердження видалення",
+    "deleteText":"Ви впевнені що хочете видалити цього водія?",
+    "cancelDelete":"НІ",
+    "confirmDelete":"ТАК",
+    "deleteSuccessMessage":"Водія успішно видалено",
+    "deleteErrorMessage":"Помила видалення водія",
+    "filterMenuText":"Застосувати фыльтри",
+    "buttonText":"Фільтри",
+    "drivingExperienceLabel":"Досвід водіння ≥",
+    "nameLabel":"Ім'я",
+    "addDriverButtonText":"Додати водія"            
+}
