@@ -1,0 +1,21 @@
+{
+    "addLabel":"Add Driver",
+    "revisionLabel":"Driver details",
+    "revisionbuttonLabel":"get back to the drivers",
+    "cancelLabel":"Cancel",
+    "labelEdit":"Edit Driver",
+    "id":"id",
+    "name":"Name",
+    "surname":"Surname",
+    "companyId":"Company Id",
+    "age": "Age",
+    "drivingExperience":"Driving experience",
+    "salary":"Salary",
+    "cars":"Cars",
+    "inFildValidation": "In the field",
+    "digitsValidation": "should be only numbers",
+    "nameValidation": "must be a string longer than 2 characters",
+    "ageValidation": "must be your age greater than 18",
+    "drivingExperienceValidation": "should be your driving experience from the age of 18 years",
+    "carsValidation": "should be the name of your car/cars"
+}
