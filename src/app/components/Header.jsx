@@ -80,6 +80,7 @@ const orderedInterfaceLangs = [
 const rightPanelItemTypes = {
   LANGUAGE: 'language',
   LOGIN: 'login',
+  DRIVERS: 'drivers',
   SEPARATOR: 'separator',
   USER_NAME: 'userName',
 };
@@ -113,6 +114,7 @@ function Header({
       !user.isFetchingUser
       && currentPage !== pages.login
     ) {
+      result.push(rightPanelItemTypes.DRIVERS);
       result.push(rightPanelItemTypes.LOGIN);
     }
     result.push(rightPanelItemTypes.LANGUAGE);
@@ -147,7 +149,29 @@ function Header({
         </div>
         <div className={classes.toolBarContainerRight}>
           {actualOrderedRightPanelItemTypes.map((itemType) => (
-            <>
+            
+            <>      
+              {itemType === rightPanelItemTypes.DRIVERS && (
+                <Link
+                  to={{
+                    pathname: `${pagesURLs[pages.driversPage]}`,
+                  }}
+                >
+                  <Button
+                    colorVariant="header"
+                    variant="text"
+                  >
+                    <Typography
+                      color="inherit"
+                      variant="subtitle"
+                    >
+                      <strong>
+                        {formatMessage({ id: 'drivers' })}
+                      </strong>
+                    </Typography>
+                  </Button>
+                </Link>
+              )}
               {itemType === rightPanelItemTypes.USER_NAME && (
                 <div ref={userMenuRef}>
                   <Hover
