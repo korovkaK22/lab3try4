@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; 
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -30,7 +30,7 @@ const styles = {
     mt: 3,
     mb: 2,
   },
-  cancelButton: { 
+  cancelButton: {
     mt: 3,
     mb: 2,
     backgroundColor: 'red',
@@ -45,25 +45,10 @@ const addDriver = (newDriver) => ({
   payload: newDriver,
 });
 
-const getNewdriverID = (newDriver) => ({
-  type: 'GET_NEW_DRIVER_ID',
-});
-
-const AddEntityForm = ({ entityLabel, apiEndpoint, fields, cancelLabel, validatioNmessage }) => {
+const AddEntityForm = ({ entityLabel, apiEndpoint, fields, cancelLabel, validationMessage }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
-  const newdriverID = useSelector(state => state.drivers.newdriverID);
-
-  useEffect(() => {
-    dispatch(getNewdriverID());
-  }, [dispatch]); 
-
-  const initialFormState = fields.reduce((acc, field) => {
-    acc[field.name] = field.name === 'id' ? newdriverID : '';
-    return acc;
-  }, {});
-
-  const [upForm, setUpForm] = useState(initialFormState);
+  const navigate = useNavigate();
+  const [upForm, setUpForm] = useState({});
   const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -74,33 +59,31 @@ const AddEntityForm = ({ entityLabel, apiEndpoint, fields, cancelLabel, validati
     let error = '';
 
     switch (name) {
-      case 'id':
-      case 'companyId':
-      case 'salary':
-        if (!/^\d+$/.test(value)) {
-          error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.digitsValidation}`;
-        }
-        break;
       case 'name':
       case 'surname':
         const lettersOnly = /^[A-Za-zА-Яа-яЁё]+$/;
         if (!value.trim() || value.trim().length < 3 || !lettersOnly.test(value.trim())) {
-          error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.nameValidation}`;
+          error = `${validationMessage.inFieldValidation} ${field.label} ${validationMessage.nameValidation}`;
         }
         break;
       case 'age':
         if (!/^\d+$/.test(value) || value < 18) {
-          error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.ageValidation}`;
+          error = `${validationMessage.inFieldValidation} ${field.label} ${validationMessage.ageValidation}`;
         }
         break;
       case 'drivingExperience':
-        if (!/^\d+$/.test(value)|| (value < 0 || (upForm.age - value) < 18)) {
-          error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.drivingExperienceValidation}`;
+        if (!/^\d+$/.test(value) || (value < 0 || (upForm.age - value) < 18)) {
+          error = `${validationMessage.inFieldValidation} ${field.label} ${validationMessage.drivingExperienceValidation}`;
+        }
+        break;
+      case 'salary':
+        if (!/^\d+$/.test(value)) {
+          error = `${validationMessage.inFieldValidation} ${field.label} ${validationMessage.digitsValidation}`;
         }
         break;
       case 'cars':
         if (!value.trim() || value.trim().length < 3) {
-          error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.carsValidation}`;
+          error = `${validationMessage.inFieldValidation} ${field.label} ${validationMessage.carsValidation}`;
         }
         break;
       default:
@@ -127,13 +110,22 @@ const AddEntityForm = ({ entityLabel, apiEndpoint, fields, cancelLabel, validati
     event.preventDefault();
     if (isFormValid()) {
       try {
-        const response = await axios.post(apiEndpoint, { ...upForm });
+        const response = await axios.post(`${apiEndpoint}`, upForm, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
         dispatch(addDriver(response.data));
-        setUpForm(initialFormState);
+        setUpForm({});
+        setOpen(true);
+        setMessage('Entity added successfully.');
+        setSeverity('success');
       } catch (err) {
         console.error('An error occurred:', err);
-        dispatch(addDriver(upForm)); 
-        setUpForm(initialFormState);
+        setOpen(true);
+        setMessage('Failed to add entity.');
+        setSeverity('error');
       }
     } else {
       setOpen(true);
@@ -170,8 +162,7 @@ const AddEntityForm = ({ entityLabel, apiEndpoint, fields, cancelLabel, validati
                 name={field.name}
                 onChange={changeUpForm}
                 required={field.required}
-                value={upForm[field.name]}
-                sx={field.name === 'id' ? { pointerEvents: 'none' } : undefined}
+                value={upForm[field.name] || ''}
               />
             </Grid>
           ))}

@@ -13,20 +13,21 @@ export const useFetchData = (apiEndpoint, useMockData) => {
         setData(driversData);
       } else {
         try {
-          const response = await axios.get(apiEndpoint);
-          if (Array.isArray(response.data)) {
-            setData(response.data);
+          const response = await axios.get(apiEndpoint, { responseType: 'json' });
+          if (Array.isArray(response)) {
+            setData(response);
           } else {
             throw new Error('Data received from the server is not in the expected format');
           }
         } catch (err) {
+          console.error('Error fetching data from server:', err);
           setError('Error fetching data from server');
         }
       }
     };
 
     fetchData();
-  }, [apiEndpoint, useMockData, driversData]); 
+  }, [apiEndpoint, useMockData, driversData]);
 
-  return { data, setData, error };
+  return { data, error };
 };

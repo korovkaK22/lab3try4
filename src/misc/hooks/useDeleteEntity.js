@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import axios from 'axios';
-import mockDrivers from '../mocks/mockDrivers';
+import { useNavigate } from 'react-router-dom'; 
 
-export const useDeleteEntity = (apiEndpoint, allowMockDataDeletion, setData, data, deleteSuccessMessage, deleteErrorMessage) => {
+export const useDeleteEntity = (
+  apiEndpoint,
+  setData,
+  data,
+  deleteSuccessMessage,
+  deleteErrorMessage
+) => {
+  const navigate = useNavigate(); 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [entityToDelete, setEntityToDelete] = useState(null);
   const [notification, setNotification] = useState({ open: false, message: '', severity: '' });
@@ -12,26 +19,17 @@ export const useDeleteEntity = (apiEndpoint, allowMockDataDeletion, setData, dat
     setDeleteDialogOpen(true);
   };
 
- const handleDeleteConfirm = async () => {
-  try {
-    if (allowMockDataDeletion || data !== mockDrivers) {
-      if (data === mockDrivers || data.find(item => item.id === entityToDelete)) {
-        setData(data.filter((item) => item.id !== entityToDelete));
-        setNotification({ open: true, message: deleteSuccessMessage, severity: 'success' });
-      } else {
-        setNotification({ open: true, message: deleteErrorMessage, severity: 'error' });
-      }
-    } else {
-      await axios.delete(`${apiEndpoint}${entityToDelete}`);
+  const handleDeleteConfirm = async () => {
+    try {
+      await axios.delete(`${apiEndpoint}/${entityToDelete}`);
       setData(data.filter((item) => item.id !== entityToDelete));
       setNotification({ open: true, message: deleteSuccessMessage, severity: 'success' });
+    } catch (err) {
+      setNotification({ open: true, message: deleteErrorMessage, severity: 'error' });
     }
-  } catch (err) {
-    setNotification({ open: true, message: deleteErrorMessage, severity: 'error' });
-  }
-  setDeleteDialogOpen(false);
-};
-
+    navigate(0);
+    setDeleteDialogOpen(false);
+  };
 
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);

@@ -7,7 +7,6 @@ import AddEntityForm from 'components/AddEntityForm';
 import RevisionEntityForm from 'components/RevisionEntityForm/RevisionEntityForm';
 import EditEntityForm from 'components/EditEntityForm';
 
-
 function DriverDetails() {
   const { formatMessage } = useIntl();
   const { id } = useParams();
@@ -19,38 +18,39 @@ function DriverDetails() {
   const [component, setComponent] = useState(null);
 
   const fields = [
-    { name: 'id', label: formatMessage({ id: 'id' }), required: true},
-    { name: 'name', label: formatMessage({ id: 'name' }), required: true},
-    { name: 'surname', label: formatMessage({ id: 'surname' }), required: true},
-    { name: 'companyId', label: formatMessage({ id: 'companyId' }), required: true},
-    { name: 'age', label: formatMessage({ id: 'age' }), required: true},
-    { name: 'drivingExperience', label: formatMessage({ id: 'drivingExperience' })},
-    { name: 'salary', label: formatMessage({ id: 'salary' }), required: true},
-    { name: 'cars', label: formatMessage({ id: 'cars' }), required: true},
+    { name: 'name', label: formatMessage({ id: 'name' }), required: true },
+    { name: 'surname', label: formatMessage({ id: 'surname' }), required: true },
+    { name: 'companyId', label: formatMessage({ id: 'companyId' }), required: true },
+    { name: 'age', label: formatMessage({ id: 'age' }), required: true },
+    { name: 'drivingExperience', label: formatMessage({ id: 'drivingExperience' }) },
+    { name: 'salary', label: formatMessage({ id: 'salary' }), required: true },
+    { name: 'cars', label: formatMessage({ id: 'cars' }), required: true },
   ];
 
-  const validatioNmessage={
-    inFildValidation:formatMessage({ id: 'inFildValidation' }),
+  const validationMessage = {
+    inFieldValidation: formatMessage({ id: 'inFieldValidation' }),
     digitsValidation: formatMessage({ id: 'digitsValidation' }),
-    nameValidation:formatMessage({ id: 'nameValidation' }),
-    ageValidation:formatMessage({ id: 'ageValidation' }),
-    drivingExperienceValidation:formatMessage({ id: 'drivingExperienceValidation' }),
-    carsValidation:formatMessage({ id: 'carsValidation' })
-  }
+    nameValidation: formatMessage({ id: 'nameValidation' }),
+    ageValidation: formatMessage({ id: 'ageValidation' }),
+    drivingExperienceValidation: formatMessage({ id: 'drivingExperienceValidation' }),
+    carsValidation: formatMessage({ id: 'carsValidation' }),
+  };
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   useEffect(() => {
-    const index = Number(id) - 1;
-    const apiEndpoint = `${process.env.SERVER_URL}/api/taxi-driver/`
-
+    const index = Number(id);
+    const apiEndpoint = `${serverUrl}/api/taxi-driver`;
     const formProps = {
       index,
       apiEndpoint,
       fields,
+      validationMessage,
     };
 
     if (isRead && !isEdd && !isEdit) {
       setComponent(
         <RevisionEntityForm
+          apiEndpoint
           {...formProps}
           entityLabel={formatMessage({ id: 'revisionLabel' })}
           buttonLabel={formatMessage({ id: 'revisionbuttonLabel' })}
@@ -59,8 +59,8 @@ function DriverDetails() {
     } else if (isRead && isEdd) {
       setComponent(
         <AddEntityForm
+          apiEndpoint
           {...formProps}
-          validatioNmessage = {validatioNmessage}
           entityLabel={formatMessage({ id: 'addLabel' })}
           cancelLabel={formatMessage({ id: 'cancelLabel' })}
         />
@@ -68,14 +68,14 @@ function DriverDetails() {
     } else if (isEdit) {
       setComponent(
         <EditEntityForm
+          apiEndpoint
           {...formProps}
-          validatioNmessage = {validatioNmessage}
           entityLabel={formatMessage({ id: 'labelEdit' })}
           cancelLabel={formatMessage({ id: 'cancelLabel' })}
         />
       );
     }
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRead, isEdd, isEdit, formatMessage, id]);
 
   return (

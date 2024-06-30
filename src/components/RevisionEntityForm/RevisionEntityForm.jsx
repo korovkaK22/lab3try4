@@ -11,7 +11,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    position: 'relative', 
+    position: 'relative',
   },
   navigateButton: {
     mt: 3,
@@ -27,36 +27,54 @@ const styles = {
   },
 };
 
-const RevisionEntityForm = ({ entityLabel, fields, index, apiEndpoint, buttonLabel }) => {
+const processResponseData = (data) => {
+  const orderedData = {
+    name: data.name || '',
+    surname: data.surname || '',
+    companyId: data.companyId || '',
+    age: data.age || '',
+    drivingExperience: data.drivingExperience || '',
+    salary: data.salary || '',
+    cars: data.cars || ''
+  };
+
+  return orderedData;
+};
+
+const RevisionEntityForm = ({ entityLabel, fields = [], index, apiEndpoint, buttonLabel }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [entityData, setEntityData] = useState({});
   const selectedDriver = useSelector(state => state.drivers.selectedDriver);
 
   useEffect(() => {
-    if (index !== undefined ) {
+    if (index !== undefined) {
       dispatch({
         type: 'GET_DRIVER_BY_INDEX',
         payload: index,
       });
+
       const fetchData = async () => {
         try {
-          const response = await axios.get(`${apiEndpoint}${index}`);
-          setEntityData(response.data);
+          const response = await axios.get(`${apiEndpoint}/${index}`);
+          const orderedData = processResponseData(response);
+          setEntityData(orderedData);
         } catch (error) {
           console.error('Помилка при отриманні даних:', error);
-          setEntityData(selectedDriver);
+          setEntityData(processResponseData(selectedDriver));
         }
       };
+
       fetchData();
     }
   }, [dispatch, index, selectedDriver, apiEndpoint]);
 
   const handleEditClick = () => {
-      dispatch({ type: 'SET_IS_READ_FALSE' });
-      dispatch({ type: 'SET_IS_EDD_FALSE' });
-      dispatch({ type: 'SET_IS_EDIT_TRUE' });
+    dispatch({ type: 'SET_IS_READ_FALSE' });
+    dispatch({ type: 'SET_IS_EDD_FALSE' });
+    dispatch({ type: 'SET_IS_EDIT_TRUE' });
   };
+
   return (
     <Container component="main" maxWidth="xs" style={styles.container}>
       <CssBaseline />
@@ -73,7 +91,7 @@ const RevisionEntityForm = ({ entityLabel, fields, index, apiEndpoint, buttonLab
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        {fields.map((field, fieldIndex) => (
+        {fields.length > 0 && fields.map((field, fieldIndex) => (
           <Grid item key={field.name} xs={12}>
             <TextField
               style={styles.disabledInput}

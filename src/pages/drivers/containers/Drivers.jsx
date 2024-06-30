@@ -13,15 +13,14 @@ function Drivers() {
     { field: 'drivingExperience', headerName: `${formatMessage({ id: 'drivingExperience' })}` },
     { field: 'cars', headerName: `${formatMessage({ id: 'cars' })}` },
   ]
-
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
   return (
     <Typography>
       <FetchDataTable
-        apiEndpoint= {`${process.env.SERVER_URL}/api/taxi-driver/`}
+        apiEndpoint= {`${serverUrl}/api/taxi-driver`}
         columns={columns}
         navigateParams='/driverDetailsID/'
         tableLabel={formatMessage({ id: 'driversTable' })}
-        allowMockDataDeletion={true}
         dialogTitle={formatMessage({ id: 'deleteConfirmation' })}
         dialogContentText={formatMessage({ id: 'deleteText' })}
         cancelButtonText={formatMessage({ id: 'cancelDelete' })}

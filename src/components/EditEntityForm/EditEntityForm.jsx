@@ -4,6 +4,7 @@ import { Container, Box, TextField, Typography, Button, Grid, CssBaseline, Snack
 import axios from 'axios';
 import MuiAlert from '@mui/material/Alert';
 
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -32,6 +33,20 @@ const styles = {
   },
 };
 
+const processResponseData = (data) => {
+  const orderedData = {
+    name: data.name || '',
+    surname: data.surname || '',
+    companyId: data.companyId || '',
+    age: data.age || '',
+    drivingExperience: data.drivingExperience || '',
+    salary: data.salary || '',
+    cars: data.cars || ''
+  };
+
+  return orderedData;
+};
+
 const EditEntityForm = ({ entityLabel, fields, index, apiEndpoint, cancelLabel, validatioNmessage }) => {
   const dispatch = useDispatch();
   const selectedDriver = useSelector(state => state.drivers.selectedDriver);
@@ -47,12 +62,27 @@ const EditEntityForm = ({ entityLabel, fields, index, apiEndpoint, cancelLabel, 
         type: 'GET_DRIVER_BY_INDEX',
         payload: index,
       });
+
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`${apiEndpoint}/${index}`);
+          const orderedData = processResponseData(response);
+          setUpForm(orderedData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setUpForm(processResponseData(selectedDriver));
+        }
+      };
+
+      fetchData();
     }
-  }, [dispatch, index]);
+  }, [dispatch, index, apiEndpoint, selectedDriver]);
 
   useEffect(() => {
-    setUpForm(selectedDriver || {});
-    setErrors({});
+    if (selectedDriver) {
+      setUpForm(processResponseData(selectedDriver));
+      setErrors({});
+    }
   }, [selectedDriver]);
 
   const validateField = (name, value) => {
@@ -66,31 +96,31 @@ const EditEntityForm = ({ entityLabel, fields, index, apiEndpoint, cancelLabel, 
         if (!/^\d+$/.test(value)) {
           error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.digitsValidation}`;
         }
-      break;
-        case 'name':
-        case 'surname':
-            const lettersOnly = /^[A-Za-zА-Яа-яЁё]+$/;
-            if (!value.trim() || value.trim().length < 3 || !lettersOnly.test(value.trim())) {
-              error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.nameValidation}`;
-            }
-            break;
+        break;
+      case 'name':
+      case 'surname':
+        const lettersOnly = /^[A-Za-zА-Яа-яЁё]+$/;
+        if (!value.trim() || value.trim().length < 3 || !lettersOnly.test(value.trim())) {
+          error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.nameValidation}`;
+        }
+        break;
       case 'age':
-        if (!/^\d+$/.test(value)&&value < 18) {
+        if (!/^\d+$/.test(value) && value < 18) {
           error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.ageValidation}`;
         }
         break;
       case 'drivingExperience':
-        if (!/^\d+$/.test(value)&& (value < 0 || ( (selectedDriver.age - value) < 18))) {
+        if (!/^\d+$/.test(value) && (value < 0 || (selectedDriver.age - value) < 18)) {
           error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.drivingExperienceValidation}`;
         }
         break;
-        case 'cars':
+      case 'cars':
         if (!value.trim() || value.trim().length < 3) {
           error = `${validatioNmessage.inFildValidation} ${field.label} ${validatioNmessage.carsValidation}`;
-  }
-  break;
-  default:
-  break;
+        }
+        break;
+      default:
+        break;
     }
 
     setErrors(prevErrors => ({ ...prevErrors, [name]: error }));
@@ -109,7 +139,15 @@ const EditEntityForm = ({ entityLabel, fields, index, apiEndpoint, cancelLabel, 
 
     if (formIsValid) {
       try {
-        const response = await axios.put(`${apiEndpoint}${index}`, { ...upForm });
+        const response = await axios.put(
+          `${apiEndpoint}/${index}`,
+          JSON.stringify(upForm),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         dispatch({ type: 'UPDATE_DRIVER', payload: { index, data: response.data } });
         setMessage('Entity has been successfully edited.');
         setSeverity('success');
@@ -129,7 +167,7 @@ const EditEntityForm = ({ entityLabel, fields, index, apiEndpoint, cancelLabel, 
       setMessage('Please correct the errors before submitting.');
       setSeverity('error');
       setOpen(true);
-    }
+    }    
   };
 
   const handleCancel = () => {
@@ -144,7 +182,7 @@ const EditEntityForm = ({ entityLabel, fields, index, apiEndpoint, cancelLabel, 
     }
     setOpen(false);
   };
-  
+
   const formIsValid = Object.values(errors).every(x => x === '');
 
   return (

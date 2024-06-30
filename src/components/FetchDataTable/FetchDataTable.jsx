@@ -20,7 +20,6 @@ export default function FetchDataTable({
   columns,
   tableLabel,
   navigateParams,
-  allowMockDataDeletion = false,
   dialogTitle,
   dialogContentText,
   cancelButtonText,
@@ -36,7 +35,7 @@ export default function FetchDataTable({
 }) {
   const [filters, setFilters] = useState({ experience: 0, name: '' });
   const [savedFilters, setSavedFilters] = useState({});
-  const { data, setData, error } = useFetchData(apiEndpoint, true);
+  const { data, setData, error } = useFetchData(apiEndpoint, false);
   const [hoveredRow, setHoveredRow] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -52,7 +51,7 @@ export default function FetchDataTable({
     handleDeleteConfirm,
     handleDeleteCancel,
     setNotification,
-  } = useDeleteEntity(apiEndpoint, allowMockDataDeletion, setData, data, deleteSuccessMessage, deleteErrorMessage);
+  } = useDeleteEntity(apiEndpoint,  setData, data, deleteSuccessMessage, deleteErrorMessage);
 
   useEffect(() => {
     const savedFiltersString = localStorage.getItem('savedFilters');
