@@ -13,7 +13,7 @@ function Drivers() {
     { field: 'drivingExperience', headerName: `${formatMessage({ id: 'drivingExperience' })}` },
     { field: 'cars', headerName: `${formatMessage({ id: 'cars' })}` },
   ]
-  const serverUrl = 'https://load-balancer-try-2-1553176268.eu-north-1.elb.amazonaws.com';
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
   return (
     <Typography>
       <FetchDataTable

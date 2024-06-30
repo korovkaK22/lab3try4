@@ -35,7 +35,7 @@ function DriverDetails() {
     drivingExperienceValidation: formatMessage({ id: 'drivingExperienceValidation' }),
     carsValidation: formatMessage({ id: 'carsValidation' }),
   };
-  const serverUrl = 'https://load-balancer-try-2-1553176268.eu-north-1.elb.amazonaws.com';
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   useEffect(() => {
     const index = Number(id);
